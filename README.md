@@ -1,6 +1,6 @@
-<h1 align="center">PHP Package Template </h1>
+<h1 align="center">Laravel Passport Cache Token</h1>
 
-<p align="center"> A template repository for PHP package.</p>
+<p align="center"> Make laravel/passport token cacheable..</p>
 
 
 ## Installing
