@@ -1,6 +1,6 @@
 {
-    "name": "overtrue/php-package",
-    "description": "A PHP package template repository.",
+    "name": "overtrue/laravel-passport-cache-token",
+    "description": "Make laravel/passport token cacheable.",
     "license": "MIT",
     "authors": [
         {
@@ -8,7 +8,11 @@
             "email": "name@domain.com"
         }
     ],
-    "require": {},
+    "require": {
+        "laravel/framework": "^7.14",
+        "laravel/passport": "^9.2",
+        "orchestra/testbench": "^5.3"
+    },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.15",
@@ -17,14 +21,19 @@
     },
     "autoload": {
         "psr-4": {
-            "Vendor\\Package\\": "src"
+            "Overtrue\\LaravelPassportCacheToken\\": "./src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "./tests"
         }
     },
     "extra": {
         "hooks": {
             "pre-commit": [
                 "composer test",
-                "composer fix-style"
+                "composer check-style"
             ],
             "pre-push": [
                 "composer test",
