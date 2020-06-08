@@ -23,7 +23,7 @@ return [
         // Cache key prefix
         'prefix' => 'passport_token_',
         
-        // The life time of token cache,
+        // The lifetime of token cache,
         // Unit: second
         'expires_in' => 300,
         
