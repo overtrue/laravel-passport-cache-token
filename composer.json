@@ -10,12 +10,12 @@
     ],
     "require": {
         "laravel/framework": "^7.14",
-        "laravel/passport": "^9.2",
-        "orchestra/testbench": "^5.3"
+        "laravel/passport": "^9.2"
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.7",
         "friendsofphp/php-cs-fixer": "^2.15",
+        "orchestra/testbench": "^5.3",
         "mockery/mockery": "^1.0",
         "phpunit/phpunit": "^9.0"
     },
