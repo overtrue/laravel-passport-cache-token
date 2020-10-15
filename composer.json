@@ -9,8 +9,8 @@
         }
     ],
     "require": {
-        "laravel/framework": "^7.14",
-        "laravel/passport": "^9.2"
+        "laravel/framework": "^7.14|^8.0",
+        "laravel/passport": "^9.2|^10.0"
     },
     "require-dev": {
         "brainmaestro/composer-git-hooks": "^2.7",
