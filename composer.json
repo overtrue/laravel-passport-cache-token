@@ -39,6 +39,11 @@
                 "composer test",
                 "composer check-style"
             ]
+        },
+        "laravel": {
+            "providers": [
+                "Overtrue\\LaravelPassportCacheToken\\CacheTokenServiceProvider"
+            ]
         }
     },
     "scripts": {
