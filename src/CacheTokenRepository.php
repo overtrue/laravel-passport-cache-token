@@ -44,7 +44,7 @@ class CacheTokenRepository extends TokenRepository
      *
      * @return \Laravel\Passport\Token
      */
-    public function find($id): Token
+    public function find($id)
     {
         return Cache::remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id) {
             return Passport::token()->where('id', $id)->first();
