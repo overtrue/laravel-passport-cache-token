@@ -15,7 +15,7 @@ Thanks to Laravel's automatic package discovery mechanism, you don't need to do 
 
 Of course, you can also control the cache strategy freely, just need to configure the following in the configuration file:
 
-//config/passport.php
+**config/passport.php**
 ```php
 return [
     //...
