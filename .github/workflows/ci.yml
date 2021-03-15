@@ -61,6 +61,6 @@ jobs:
       - name: Install Dependencies
         run: composer install --prefer-dist --no-interaction --no-suggest
       - name: Laravel Version
-        run: php artisan list | grep "Laravel Framework"
+        run: cat vendor/laravel/framework/src/Illuminate/Foundation/Application.php | grep "const VERSION"
       - name: Run PHPUnit
         run: composer test
