@@ -60,5 +60,7 @@ jobs:
         run: composer require "laravel/framework:^6.0"
       - name: Install Dependencies
         run: composer install --prefer-dist --no-interaction --no-suggest
+      - name: Laravel Version
+        run: php artisan list | grep "Laravel Framework"
       - name: Run PHPUnit
         run: composer test
