@@ -22,7 +22,7 @@ jobs:
         run: composer check-style
 
   phpunit:
-    name: PHP-${{ matrix.php_version }}-${{ matrix.perfer }}
+    name: phpunit
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -43,7 +43,7 @@ jobs:
         run: ./vendor/bin/phpunit
 
   L6_test:
-    name: PHP-${{ matrix.php_version }}-${{ matrix.perfer }}
+    name: L6_test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
