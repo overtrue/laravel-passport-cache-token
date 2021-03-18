@@ -13,7 +13,8 @@ class CacheTokenServiceProvider extends ServiceProvider
             return new CacheTokenRepository(
                 \config('passport.cache.prefix'),
                 \config('passport.cache.expires_in'),
-                \config('passport.cache.tags', [])
+                \config('passport.cache.tags', []),
+                \config('passport.cache.store', \config('cache.default'))
             );
         });
     }
