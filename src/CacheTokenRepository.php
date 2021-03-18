@@ -35,12 +35,12 @@ class CacheTokenRepository extends TokenRepository
      * @param int    $expiresInSeconds
      * @param array  $tags
      */
-    public function __construct(string $cacheKey = null, int $expiresInSeconds = null, array $tags = [], string $store = 'file')
+    public function __construct(string $cacheKey = null, int $expiresInSeconds = null, array $tags = [], ?string $store = null)
     {
         $this->cacheKey = $cacheKey ?? 'passport_token_';
         $this->expiresInSeconds = $expiresInSeconds ?? 5 * 60;
         $this->cacheTags = $tags;
-        $this->cacheStore = $store;
+        $this->cacheStore = $store ?? \config('cache.default');
     }
 
     /**
