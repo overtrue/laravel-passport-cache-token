@@ -26,15 +26,21 @@ class CacheTokenRepository extends TokenRepository
     protected $cacheTags;
 
     /**
+     * @var string
+     */
+    protected $cacheStore;
+
+    /**
      * @param string $cacheKey
      * @param int    $expiresInSeconds
      * @param array  $tags
      */
-    public function __construct(string $cacheKey = null, int $expiresInSeconds = null, array $tags = [])
+    public function __construct(string $cacheKey = null, int $expiresInSeconds = null, array $tags = [], ?string $store = null)
     {
         $this->cacheKey = $cacheKey ?? 'passport_token_';
         $this->expiresInSeconds = $expiresInSeconds ?? 5 * 60;
         $this->cacheTags = $tags;
+        $this->cacheStore = $store ?? \config('cache.default');
     }
 
     /**
@@ -46,7 +52,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function find($id)
     {
-        return Cache::remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id) {
+        return Cache::store($this->cacheStore)->remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id) {
             return Passport::token()->where('id', $id)->first();
         });
     }
@@ -61,7 +67,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function findForUser($id, $userId)
     {
-        return Cache::remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id, $userId) {
+        return Cache::store($this->cacheStore)->remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id, $userId) {
             return Passport::token()->where('id', $id)->where('user_id', $userId)->first();
         });
     }
@@ -75,7 +81,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function forUser($userId): Collection
     {
-        return Cache::remember($this->cacheKey . $userId, \now()->addSeconds($this->expiresInSeconds), function () use ($userId) {
+        return Cache::store($this->cacheStore)->remember($this->cacheKey . $userId, \now()->addSeconds($this->expiresInSeconds), function () use ($userId) {
             return Passport::token()->where('user_id', $userId)->get();
         });
     }
@@ -90,7 +96,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function getValidToken($user, $client)
     {
-        return Cache::remember($this->cacheKey . $user->getKey(), \now()->addSeconds($this->expiresInSeconds), function () use ($client, $user) {
+        return Cache::store($this->cacheStore)->remember($this->cacheKey . $user->getKey(), \now()->addSeconds($this->expiresInSeconds), function () use ($client, $user) {
             return $client->tokens()
                 ->whereUserId($user->getKey())
                 ->where('revoked', 0)
