@@ -13,7 +13,7 @@ class CacheTokenRepository extends TokenRepository
     /**
      * @var string
      */
-    protected $cacheKey;
+    protected $cacheKeyPrefix;
 
     /**
      * @var int
@@ -31,13 +31,14 @@ class CacheTokenRepository extends TokenRepository
     protected $cacheStore;
 
     /**
-     * @param string $cacheKey
-     * @param int    $expiresInSeconds
-     * @param array  $tags
+     * @param string|null $cacheKeyPrefix
+     * @param int|null    $expiresInSeconds
+     * @param array       $tags
+     * @param string|null $store
      */
-    public function __construct(string $cacheKey = null, int $expiresInSeconds = null, array $tags = [], ?string $store = null)
+    public function __construct(string $cacheKeyPrefix = null, int $expiresInSeconds = null, array $tags = [], ?string $store = null)
     {
-        $this->cacheKey = $cacheKey ?? 'passport_token_';
+        $this->cacheKeyPrefix = sprintf('%s_token_', $cacheKeyPrefix ?? 'passport');
         $this->expiresInSeconds = $expiresInSeconds ?? 5 * 60;
         $this->cacheTags = $tags;
         $this->cacheStore = $store ?? \config('cache.default');
@@ -52,9 +53,13 @@ class CacheTokenRepository extends TokenRepository
      */
     public function find($id)
     {
-        return Cache::store($this->cacheStore)->remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id) {
-            return Passport::token()->where('id', $id)->first();
-        });
+        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+            $this->itemKey($id),
+            \now()->addSeconds($this->expiresInSeconds),
+            function () use ($id) {
+                return Passport::token()->where('id', $id)->first();
+            }
+        );
     }
 
     /**
@@ -67,9 +72,13 @@ class CacheTokenRepository extends TokenRepository
      */
     public function findForUser($id, $userId)
     {
-        return Cache::store($this->cacheStore)->remember($this->cacheKey . $id, \now()->addSeconds($this->expiresInSeconds), function () use ($id, $userId) {
-            return Passport::token()->where('id', $id)->where('user_id', $userId)->first();
-        });
+        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+            $this->itemKey($id),
+            \now()->addSeconds($this->expiresInSeconds),
+            function () use ($id, $userId) {
+                return Passport::token()->where('id', $id)->where('user_id', $userId)->first();
+            }
+        );
     }
 
     /**
@@ -81,9 +90,13 @@ class CacheTokenRepository extends TokenRepository
      */
     public function forUser($userId): Collection
     {
-        return Cache::store($this->cacheStore)->remember($this->cacheKey . $userId, \now()->addSeconds($this->expiresInSeconds), function () use ($userId) {
-            return Passport::token()->where('user_id', $userId)->get();
-        });
+        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+            $this->itemKey($userId),
+            \now()->addSeconds($this->expiresInSeconds),
+            function () use ($userId) {
+                return Passport::token()->where('user_id', $userId)->get();
+            }
+        );
     }
 
     /**
@@ -96,12 +109,21 @@ class CacheTokenRepository extends TokenRepository
      */
     public function getValidToken($user, $client)
     {
-        return Cache::store($this->cacheStore)->remember($this->cacheKey . $user->getKey(), \now()->addSeconds($this->expiresInSeconds), function () use ($client, $user) {
-            return $client->tokens()
-                ->whereUserId($user->getKey())
-                ->where('revoked', 0)
-                ->where('expires_at', '>', \now())
-                ->first();
-        });
+        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+            $this->itemKey($user->getKey()),
+            \now()->addSeconds($this->expiresInSeconds),
+            function () use ($client, $user) {
+                return $client->tokens()
+                    ->whereUserId($user->getKey())
+                    ->where('revoked', 0)
+                    ->where('expires_at', '>', \now())
+                    ->first();
+            }
+        );
+    }
+
+    public function itemKey(string $key)
+    {
+        return $this->cacheKeyPrefix . $key;
     }
 }
