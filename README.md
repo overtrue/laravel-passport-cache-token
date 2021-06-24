@@ -1,4 +1,4 @@
-Laravel Passport Cache Token
+# Laravel Passport Cache Token
 
 Make [laravel/passport](https://github.com/laravel/passport) token cacheable.
 
