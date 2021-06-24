@@ -1,6 +1,6 @@
-<h1 align="center">Laravel Passport Cache Token</h1>
+Laravel Passport Cache Token
 
-<p align="center"> Make laravel/passport token cacheable..</p>
+Make [laravel/passport](https://github.com/laravel/passport) token cacheable.
 
 
 ## Installing
