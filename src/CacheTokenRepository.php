@@ -2,6 +2,8 @@
 
 namespace Overtrue\LaravelPassportCacheToken;
 
+use Illuminate\Cache\TaggableStore;
+use Illuminate\Contracts\Cache\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Laravel\Passport\Passport;
 use Laravel\Passport\Token;
@@ -53,7 +55,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function find($id)
     {
-        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+        return $this->store()->remember(
             $this->itemKey($id),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($id) {
@@ -72,7 +74,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function findForUser($id, $userId)
     {
-        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+        return $this->store()->remember(
             $this->itemKey($id),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($id, $userId) {
@@ -90,7 +92,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function forUser($userId): Collection
     {
-        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+        return $this->store()->remember(
             $this->itemKey($userId),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($userId) {
@@ -109,7 +111,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function getValidToken($user, $client)
     {
-        return Cache::store($this->cacheStore)->tags($this->cacheTags)->remember(
+        return $this->store()->remember(
             $this->itemKey($user->getKey()),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($client, $user) {
@@ -125,5 +127,12 @@ class CacheTokenRepository extends TokenRepository
     public function itemKey(string $key)
     {
         return $this->cacheKeyPrefix . $key;
+    }
+
+    public function store(): Repository
+    {
+        $store = Cache::store($this->cacheStore);
+
+        return $store instanceof TaggableStore ? $store->tags($this->cacheTags) : $store;
     }
 }
