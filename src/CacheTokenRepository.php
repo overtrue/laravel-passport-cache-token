@@ -135,4 +135,11 @@ class CacheTokenRepository extends TokenRepository
 
         return $store instanceof TaggableStore ? $store->tags($this->cacheTags) : $store;
     }
+
+    public function revokeAccessToken($id)
+    {
+        parent::revokeAccessToken($id);
+
+        $this->store()->forget($this->itemKey($id));
+    }
 }
