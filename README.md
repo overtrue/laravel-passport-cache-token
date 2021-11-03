@@ -33,6 +33,12 @@ return [
 ];
 ```
 
+## :heart: Sponsor me 
+
+If you like the work I do and want to support it, [you know what to do :heart:](https://github.com/sponsors/overtrue)
+
+如果你喜欢我的项目并想支持它，[点击这里 :heart:](https://github.com/sponsors/overtrue)
+
 ## Contributing
 
 You can contribute in one of three ways:
