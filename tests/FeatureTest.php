@@ -6,7 +6,6 @@ use Illuminate\Auth\RequestGuard;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Contracts\Routing\Registrar;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Laravel\Passport\Client;
 use Laravel\Passport\ClientRepository;
@@ -100,13 +99,13 @@ class FeatureTest extends TestCase
 
         // revoke token
         $token = $tokenRepository->findValidToken($user, $client);
-        $this->assertTrue(Cache::has(app(TokenRepository::class)->itemKey($token->id)));
+        $this->assertTrue($tokenRepository->cacheStore()->has(app(TokenRepository::class)->itemKey($token->id)));
 
         $tokenRepository->revokeAccessToken($token->id);
         $token->refresh();
         $this->assertTrue($token->revoked);
 
-        $this->assertFalse(Cache::has($tokenRepository->itemKey($token->id)));
+        $this->assertFalse($tokenRepository->cacheStore()->has($tokenRepository->itemKey($token->id)));
 
         // logout
         RequestGuard::macro('logout', function () {

@@ -53,9 +53,9 @@ class CacheTokenRepository extends TokenRepository
      *
      * @return \Laravel\Passport\Token
      */
-    public function find($id)
+    public function find($id): Token
     {
-        return $this->store()->remember(
+        return $this->cacheStore()->remember(
             $this->itemKey($id),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($id) {
@@ -72,9 +72,9 @@ class CacheTokenRepository extends TokenRepository
      *
      * @return \Laravel\Passport\Token|null
      */
-    public function findForUser($id, $userId)
+    public function findForUser($id, $userId): ?Token
     {
-        return $this->store()->remember(
+        return $this->cacheStore()->remember(
             $this->itemKey($id),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($id, $userId) {
@@ -92,7 +92,7 @@ class CacheTokenRepository extends TokenRepository
      */
     public function forUser($userId): Collection
     {
-        return $this->store()->remember(
+        return $this->cacheStore()->remember(
             $this->itemKey($userId),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($userId) {
@@ -109,9 +109,9 @@ class CacheTokenRepository extends TokenRepository
      *
      * @return \Laravel\Passport\Token|null
      */
-    public function getValidToken($user, $client)
+    public function getValidToken($user, $client): ?Token
     {
-        return $this->store()->remember(
+        return $this->cacheStore()->remember(
             $this->itemKey($user->getKey()),
             \now()->addSeconds($this->expiresInSeconds),
             function () use ($client, $user) {
@@ -124,22 +124,22 @@ class CacheTokenRepository extends TokenRepository
         );
     }
 
-    public function itemKey(string $key)
+    public function itemKey(string $key): string
     {
         return $this->cacheKeyPrefix . $key;
     }
 
-    public function store(): Repository
+    public function cacheStore(): Repository
     {
         $store = Cache::store($this->cacheStore);
 
-        return $store instanceof TaggableStore ? $store->tags($this->cacheTags) : $store;
+        return $store->getStore() instanceof TaggableStore ? $store->tags($this->cacheTags) : $store;
     }
 
     public function revokeAccessToken($id)
     {
         parent::revokeAccessToken($id);
 
-        $this->store()->forget($this->itemKey($id));
+        $this->cacheStore()->forget($this->itemKey($id));
     }
 }
