@@ -53,7 +53,7 @@ class CacheTokenRepository extends TokenRepository
      *
      * @return \Laravel\Passport\Token
      */
-    public function find($id): Token
+    public function find($id): ?Token
     {
         return $this->cacheStore()->remember(
             $this->itemKey($id),
