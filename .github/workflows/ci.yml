@@ -12,14 +12,10 @@ jobs:
           - 7.4
         perfer:
           - stable
-    container:
-      image: nauxliu/php-ci-image:${{ matrix.php_version }}
     steps:
       - uses: actions/checkout@master
       - name: Install Dependencies
         run: composer install --prefer-dist --no-interaction --no-suggest
-      - name: Run PHP-CS-Fxier
-        run: composer check-style
 
   phpunit:
     name: phpunit
@@ -28,13 +24,11 @@ jobs:
       fail-fast: false
       matrix:
         php_version:
-          - 7.3
           - 7.4
           - 8.0
+          - 8.1
         perfer:
           - stable
-    container:
-      image: nauxliu/php-ci-image:${{ matrix.php_version }}
     steps:
       - uses: actions/checkout@master
       - name: Install Dependencies
@@ -52,8 +46,6 @@ jobs:
           - 7.4
         perfer:
           - stable
-    container:
-      image: nauxliu/php-ci-image:${{ matrix.php_version }}
     steps:
       - uses: actions/checkout@master
       - name: Install laravel/framework:^6.0
