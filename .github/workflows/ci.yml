@@ -2,57 +2,36 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  php_cs_fixer:
-    name: PHP-CS-Fxier
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php_version:
-          - 7.4
-        perfer:
-          - stable
-    steps:
-      - uses: actions/checkout@master
-      - name: Install Dependencies
-        run: composer install --prefer-dist --no-interaction --no-suggest
+    php_cs_fixer:
+        name: PHP-CS-Fxier
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php_version:
+                    - 8.0
+                    - 8.1
+                perfer:
+                    - stable
+        steps:
+            - uses: actions/checkout@master
+            - name: Install Dependencies
+              run: composer install --prefer-dist --no-interaction --no-suggest
 
-  phpunit:
-    name: phpunit
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php_version:
-          - 7.4
-          - 8.0
-          - 8.1
-        perfer:
-          - stable
-    steps:
-      - uses: actions/checkout@master
-      - name: Install Dependencies
-        run: composer install --prefer-dist --no-interaction --no-suggest
-      - name: Run PHPUnit
-        run: ./vendor/bin/phpunit
-
-  L6_test:
-    name: L6_test
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php_version:
-          - 7.4
-        perfer:
-          - stable
-    steps:
-      - uses: actions/checkout@master
-      - name: Install laravel/framework:^6.0
-        run: composer require "laravel/framework:^6.0"
-      - name: Install Dependencies
-        run: composer install --prefer-dist --no-interaction --no-suggest
-      - name: Laravel Version
-        run: cat vendor/laravel/framework/src/Illuminate/Foundation/Application.php | grep "const VERSION"
-      - name: Run PHPUnit
-        run: composer test
+    phpunit:
+        name: phpunit
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php_version:
+                    - 8.0
+                    - 8.1
+                perfer:
+                    - stable
+        steps:
+            - uses: actions/checkout@master
+            - name: Install Dependencies
+              run: composer install --prefer-dist --no-interaction --no-suggest
+            - name: Run PHPUnit
+              run: ./vendor/bin/phpunit
