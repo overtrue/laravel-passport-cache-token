@@ -1,3 +1,7 @@
+
+> 🚨 This package was created because of this issue: laravel/passport#382 . But the new version of passport has officially solved this issue at: laravel/passport#1447, so I think we can stop needing this package.
+
+
 # Laravel Passport Cache Token
 
 Make [laravel/passport](https://github.com/laravel/passport) token cacheable.
